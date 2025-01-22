@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+
+{% block title %} E-commerce Admin Panel  {% endblock %}
+
+
+{% block content %}
+            <header class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Dashboard</h2>
+                <button class="md:hidden bg-indigo-600 text-white p-2 rounded" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md transition-transform hover:scale-105">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-700">Total Sales</h3>
+                    <p class="text-3xl font-bold text-indigo-600">$24,500</p>
+                    <p class="text-sm text-gray-500 mt-2">+12% from last month</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md transition-transform hover:scale-105">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-700">Total Orders</h3>
+                    <p class="text-3xl font-bold text-indigo-600">356</p>
+                    <p class="text-sm text-gray-500 mt-2">+5% from last month</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md transition-transform hover:scale-105">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-700">New Customers</h3>
+                    <p class="text-3xl font-bold text-indigo-600">78</p>
+                    <p class="text-sm text-gray-500 mt-2">+18% from last month</p>
+                </div>
+            </div>
+
+            <!-- Products by Category Chart -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8 animate-fadeIn">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700">Products by Category</h3>
+                <div class="w-full h-[400px]">
+                    <canvas id="productsByCategoryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="bg-white p-6 rounded-lg shadow-md animate-fadeIn">
+                <h3 class="text-xl font-semibold mb-4 text-gray-700">Recent Orders</h3>
+                {% if orders %}
+                     <table class="w-full">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="p-2 text-left">Order ID</th>
+                                <th class="p-2 text-left">Customer</th>
+                                <th class="p-2 text-left">Date</th>
+                                <th class="p-2 text-left">Total</th>
+                                <th class="p-2 text-left">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                <tr class="border-b">
+                                    <td class="p-2">{{ order.id }}</td>
+                                    <td class="p-2">{{ order.customer_name }}</td>
+                                    <td class="p-2">{{ order.created_at }}</td>
+                                    <td class="p-2">${{ order.products.price.count }}</td>
+                                    <td class="p-2"><span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm">{{ order.status }}</span></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <h3>No Order!</h3>
+                {% endif %}
+            </div>
+
+{% endblock %}
+

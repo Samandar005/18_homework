@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+
+{% block title %} {% if category %} Edit Category - E-commerce Admin Panel {% else %} Add Category - E-commerce Admin Panel {% endif %} {% endblock %}
+
+
+{% block content %}
+            <header class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">{% if category %} Edit Category {% else %} Add Category {% endif %}</h2>
+                <button class="md:hidden bg-indigo-600 text-white p-2 rounded" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </header>
+
+            <!-- Category Form -->
+               <div class="bg-white p-6 rounded-lg shadow-md animate-fadeIn">
+                    <form method="post" class="space-y-4" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div>
+                            <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.name.label }}</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <ul class="mt-1 text-sm text-red-600">
+                                    {% for error in form.name.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.description.label }}</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <ul class="mt-1 text-sm text-red-600">
+                                    {% for error in form.description.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <label for="{{ form.icons.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.icons.label }}</label>
+                            {{ form.icons }}
+                            {% if form.icons.errors %}
+                                <ul class="mt-1 text-sm text-red-600">
+                                    {% for error in form.icons.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div class="flex justify-end space-x-4">
+                            {% if category %}
+                                <a href="{{ category.get_detail_url }}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-colors duration-200">Cancel</a>
+                                <button typ e="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">Update Category</button>
+                            {% else %}
+                                <a href="{% url 'categories:list' %}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-colors duration-200">Cancel</a>
+                                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">Save Category</button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+
+{% endblock %}

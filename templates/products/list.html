@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Products - E-commerce Admin Panel  {% endblock %}
+
+
+{% block content %}
+             <header class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Products</h2>
+                <button class="md:hidden bg-indigo-600 text-white p-2 rounded" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </header>
+
+            <!-- Product List Controls -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-8 animate-fadeIn">
+                <div class="flex flex-wrap gap-4 items-center justify-between">
+                  <div class="flex flex-wrap gap-4 items-center">
+                    <form method="get" action="">
+                        <input type="text" name="search" placeholder="Search products" class="border p-2 rounded" value="{{ request.GET.search }}">
+                        <select id="category-select" name="category" class="border p-2 rounded">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" {% if request.GET.category == category.id %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">
+                            <i class="fas fa-search mr-2"></i>Search
+                        </button>
+                    </form>
+                </div>
+                    <div class="flex gap-4 items-center">
+                        <form method="get" action="">
+                            <label for="sort-select" class="sort-label">Sort by:</label>
+                            <select id="sort-select" class="sort-select" name="sort" onchange="this.form.submit()">
+                                <option value="name" {% if request.GET.sort == "name" %}selected{% endif %}>
+                                    Name: A to Z
+                                </option>
+                                <option value="-price" {% if request.GET.sort == "-price" %}selected{% endif %}>
+                                    Price: Low to High
+                                </option>
+                                <option value="price" {% if request.GET.sort == "price" %}selected{% endif %}>
+                                    Price: High to Low
+                                </option>
+                            </select>
+                        </form>
+                        <a href="{% url 'products:create' %}" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors duration-200">
+                            <i class="fas fa-plus mr-2"></i>Add Product
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product List -->
+            <div class="bg-white p-6 rounded-lg shadow-md animate-fadeIn">
+                {% if products %}
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-2 text-left">ID</th>
+                            <th class="p-2 text-left">Name</th>
+                            <th class="p-2 text-left">Category</th>
+                            <th class="p-2 text-left">Price</th>
+                            <th class="p-2 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for product in products %}
+                        <tr class="border-b">
+                            <td class="p-2">{{ product.id }}</td>
+                            <td class="p-2">{{ product.name }}</td>
+                            <td class="p-2">{{ product.category }}</td>
+                            <td class="p-2">${{ product.price }}</td>
+                            <td class="p-2">
+                                <a href="{{ product.get_detail_url }}" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-eye"></i></a>
+                                <a href="{{ product.get_update_url }}" class="text-yellow-600 hover:text-yellow-800 mr-2"><i class="fas fa-edit"></i></a>
+                                <a href="{{ product.get_delete_url }}" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <h3>No Product!</h3>
+                {% endif %}
+            </div>
+{% endblock %}

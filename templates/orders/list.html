@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Orders - E-commerce Admin Panel  {% endblock %}
+
+
+{% block content %}
+<header class="flex justify-between items-center mb-8">
+    <h2 class="text-3xl font-bold text-gray-800">Orders</h2>
+    <button class="md:hidden bg-indigo-600 text-white p-2 rounded" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+</header>
+
+<!-- Order List Controls -->
+<div class="bg-white p-6 rounded-lg shadow-md mb-8 animate-fadeIn">
+    <div class="flex flex-wrap gap-4 items-center justify-between">
+        <div class="flex flex-wrap gap-4 items-center">
+            <input type="text" placeholder="Search orders" class="border p-2 rounded">
+            <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">
+                <i class="fas fa-search mr-2"></i>Search
+            </button>
+        </div>
+        <div>
+            <select class="border p-2 rounded">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Order List -->
+<div class="bg-white p-6 rounded-lg shadow-md animate-fadeIn">
+    {% if orders %}
+    <table class="w-full">
+        <thead>
+        <tr class="bg-gray-100">
+            <th class="p-2 text-left">Order ID</th>
+            <th class="p-2 text-left">Customer</th>
+            <th class="p-2 text-left">Date</th>
+            <th class="p-2 text-left">Total</th>
+            <th class="p-2 text-left">Status</th>
+            <th class="p-2 text-left">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+        <tr class="border-b">
+            <td class="p-2">#{{ order.id }}</td>
+            <td class="p-2">{{ order.customer_name }}</td>
+            <td class="p-2">{{ order.created_at }}</td>
+            <td class="p-2">$99.99</td>
+            <td class="p-2"><span class="bg-green-200 text-green-800 py-1 px-2 rounded-full text-sm">{{ order.status }}</span>
+            </td>
+            <td class="p-2">
+                <a href="{{ order.get_detail_url }}" class="text-blue-600 hover:text-blue-800 mr-2"><i class="fas fa-eye"></i></a>
+                <a href="" class="text-yellow-600 hover:text-yellow-800"><i class="fas fa-edit"></i></a>
+            </td>
+        </tr>
+        {% endfor%}
+        </tbody>
+    </table>
+    {% else %}
+        <h3>No Orders!</h3>
+    {% endif %}
+</div>
+{% endblock %}
+
