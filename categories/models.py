@@ -6,7 +6,7 @@ from django.urls import reverse
 class Category(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
-    icons = models.FileField(upload_to='categories/')
+    icons = models.FileField(upload_to='categories/', null=True, blank=True,)
     slug = models.SlugField(unique=True, blank=True)
     created_at = models.DateField(auto_now_add=True)
     update_at = models.DateField(auto_now=True)

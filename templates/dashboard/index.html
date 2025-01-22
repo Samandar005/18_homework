@@ -59,8 +59,22 @@
                                     <td class="p-2">{{ order.id }}</td>
                                     <td class="p-2">{{ order.customer_name }}</td>
                                     <td class="p-2">{{ order.created_at }}</td>
-                                    <td class="p-2">${{ order.products.price.count }}</td>
-                                    <td class="p-2"><span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded text-sm">{{ order.status }}</span></td>
+                                    <td class="p-2">${{ order.get_total_price }}</td>
+                                    <td class="p-2">
+                                        {% if order.status == 'pd' %}
+                                            <span class="bg-yellow-200 text-yellow-800 py-1 px-2 rounded-full text-sm">
+                                        {% elif order.status == 'pg' %}
+                                            <span class="bg-blue-200 text-blue-800 py-1 px-2 rounded-full text-sm">
+                                        {% elif order.status == 'shd' %}
+                                            <span class="bg-purple-200 text-purple-800 py-1 px-2 rounded-full text-sm">
+                                        {% elif order.status == 'dd' %}
+                                            <span class="bg-green-200 text-green-800 py-1 px-2 rounded-full text-sm">
+                                        {% else %}
+                                            <span class="bg-red-200 text-red-800 py-1 px-2 rounded-full text-sm">
+                                        {% endif %}
+                                            {{ order.get_status_display }}
+                                        </span>
+                                </td>
                                 </tr>
                             {% endfor %}
                         </tbody>

@@ -18,19 +18,23 @@
                   <div class="flex flex-wrap gap-4 items-center">
                     <form method="get" action="">
                         <input type="text" name="search" placeholder="Search products" class="border p-2 rounded" value="{{ request.GET.search }}">
+
                         <select id="category-select" name="category" class="border p-2 rounded">
                             <option value="">All Categories</option>
                             {% for category in categories %}
-                                <option value="{{ category.id }}" {% if request.GET.category == category.id %}selected{% endif %}>
+                                <option value="{{ category.id }}"
+                                    {% if request.GET.category == category.id|slugify %} selected {% endif %}>
                                     {{ category.name }}
                                 </option>
                             {% endfor %}
                         </select>
+
                         <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">
                             <i class="fas fa-search mr-2"></i>Search
                         </button>
                     </form>
-                </div>
+
+                  </div>
                     <div class="flex gap-4 items-center">
                         <form method="get" action="">
                             <label for="sort-select" class="sort-label">Sort by:</label>

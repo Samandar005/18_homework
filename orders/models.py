@@ -19,9 +19,13 @@ class Order(models.Model):
     address = models.TextField()
     created_at = models.DateField(auto_now_add=True)
 
-
     def get_detail_url(self):
         return reverse('orders:detail', args=[self.pk])
+
+
+    def get_total_price(self):
+        total = sum(item.quantity * item.product.price for item in self.order_items.all())
+        return total
 
     def __str__(self):
         return f"{self.customer_name}"

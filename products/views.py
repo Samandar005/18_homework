@@ -6,22 +6,25 @@ from .forms import ProductForm
 
 
 def product_list(request):
-    selected_categories = None
     products = Product.objects.all()
     categories = Category.objects.all()
 
+    # Get query parameters
     category = request.GET.get('category')
     sort = request.GET.get('sort')
     search_query = request.GET.get('search')
 
+    # Filter by category if selected
     if category:
-        products = products.filter(category__id__in=category)
-        selected_categories = categories.filter(id__in=category)
-        categories =categories.exclude(id__in=category)
+        products = products.filter(category__id=category)
+        # Remove this line to keep all categories visible in dropdown
+        # categories = categories.exclude(id=category)
 
+    # Search filtering
     if search_query:
         products = products.filter(name__icontains=search_query)
 
+    # Sorting logic
     if sort == 'price':
         products = products.order_by('price')
     elif sort == '-price':
@@ -29,13 +32,14 @@ def product_list(request):
     elif sort == 'name':
         products = products.order_by('name')
 
+    # Pass the context to the template
     ctx = {
         'products': products,
-        'selected_categories': selected_categories,
-        'categories': categories
+        'categories': categories,
+        'category': category,  # Pass selected category to the template
+        'search': search_query,  # Pass the search query back to the template
     }
     return render(request, 'products/list.html', ctx)
-
 
 def product_create(request):
     if request.method == 'POST':
