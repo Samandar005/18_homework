@@ -1,17 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CategoryForm
 from .models import Category
+from django.contrib import messages
 
 
 def category_list(request):
     categories = Category.objects.all()
     search_query = request.GET.get('search')
-
     if search_query:
         categories = categories.filter(name__icontains=search_query)
 
     ctx = {'categories': categories}
     return render(request, 'categories/list.html', ctx)
+
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
 
 def category_create(request):
     if request.method == 'POST':
@@ -22,7 +25,12 @@ def category_create(request):
                 description = form.cleaned_data['description'],
                 icons = request.FILES['icons'],
             )
+            messages.success(request, "Category successfully created!")
             return redirect('categories:list')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
 
     form = CategoryForm()
     ctx = {'form': form}
@@ -38,8 +46,13 @@ def category_update(request, pk):
             if 'icons' in request.FILES:
                 category.icons = request.FILES['icons']
             category.save()
-            category.save()
+            messages.success(request, "Category successfully updated!")
             return redirect(category.get_detail_url())
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+
     form = CategoryForm(initial={
         'name': category.name,
         'description': category.description,

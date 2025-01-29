@@ -16,12 +16,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <div class="bg-white p-6 rounded-lg shadow-md transition-transform hover:scale-105">
                     <h3 class="text-xl font-semibold mb-4 text-gray-700">Total Sales</h3>
-                    <p class="text-3xl font-bold text-indigo-600">$24,500</p>
+                    <p class="text-3xl font-bold text-indigo-600">${{ total_price }}</p>
                     <p class="text-sm text-gray-500 mt-2">+12% from last month</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md transition-transform hover:scale-105">
                     <h3 class="text-xl font-semibold mb-4 text-gray-700">Total Orders</h3>
-                    <p class="text-3xl font-bold text-indigo-600">356</p>
+                    <p class="text-3xl font-bold text-indigo-600">{{ total_orders }}</p>
                     <p class="text-sm text-gray-500 mt-2">+5% from last month</p>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md transition-transform hover:scale-105">

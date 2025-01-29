@@ -1,5 +1,5 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
-
 from categories.models import Category
 from .models import Product
 from .forms import ProductForm
@@ -9,22 +9,16 @@ def product_list(request):
     products = Product.objects.all()
     categories = Category.objects.all()
 
-    # Get query parameters
     category = request.GET.get('category')
     sort = request.GET.get('sort')
     search_query = request.GET.get('search')
 
-    # Filter by category if selected
     if category:
         products = products.filter(category__id=category)
-        # Remove this line to keep all categories visible in dropdown
-        # categories = categories.exclude(id=category)
 
-    # Search filtering
     if search_query:
         products = products.filter(name__icontains=search_query)
 
-    # Sorting logic
     if sort == 'price':
         products = products.order_by('price')
     elif sort == '-price':
@@ -32,27 +26,34 @@ def product_list(request):
     elif sort == 'name':
         products = products.order_by('name')
 
-    # Pass the context to the template
     ctx = {
         'products': products,
         'categories': categories,
-        'category': category,  # Pass selected category to the template
-        'search': search_query,  # Pass the search query back to the template
+        'category': category,
+        'search': search_query,
     }
     return render(request, 'products/list.html', ctx)
+
+
 
 def product_create(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             Product.objects.create(
-                name = form.cleaned_data['name'],
-                category = form.cleaned_data['category'],
-                price = form.cleaned_data['price'],
-                description = form.cleaned_data['description'],
-                image = request.FILES['image'],
+                name=form.cleaned_data['name'],
+                category=form.cleaned_data['category'],
+                price=form.cleaned_data['price'],
+                description=form.cleaned_data['description'],
+                image=request.FILES['image'],
             )
+            messages.success(request, "Product successfully created!")
             return redirect('products:list')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+
     form = ProductForm()
     ctx = {
         'form': form,
@@ -68,9 +69,16 @@ def product_update(request, pk):
             product.category = form.cleaned_data['category']
             product.price = form.cleaned_data['price']
             product.description = form.cleaned_data['description']
-            product.image = request.FILES.get('image', product.image)
+            if 'image' in request.FILES:
+                product.image = request.FILES['image']
             product.save()
+            messages.success(request, "Product successfully updated!")
             return redirect(product.get_detail_url())
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+
     form = ProductForm(initial={
         'name': product.name,
         'category': product.category,

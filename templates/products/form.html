@@ -1,92 +1,148 @@
 {% extends 'base.html' %}
 
-
-{% block title %} {% if product %} Edit Product - E-commerce Admin Panel {% else %} Add Product - E-commerce Admin Panel {% endif %} {% endblock %}
-
-
-{% block content %}
-             <header class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-bold text-gray-800">{% if product %} Edit Product {% else %} Add Product {% endif %}</h2>
-                <button class="md:hidden bg-indigo-600 text-white p-2 rounded" onclick="toggleSidebar()">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </header>
-
-            <!-- Product Form -->
-        <div class="bg-white p-6 rounded-lg shadow-md animate-fadeIn">
-            <form method="post" class="space-y-4" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div>
-                    <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.name.label }}</label>
-                    {{ form.name }}
-                    {% if form.name.errors %}
-                        <ul class="mt-1 text-sm text-red-600">
-                            {% for error in form.name.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
-
-                <div>
-                    <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.category.label }}</label>
-                    {{ form.category }}
-                    {% if form.category.errors %}
-                        <ul class="mt-1 text-sm text-red-600">
-                            {% for error in form.category.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
-
-                <div>
-                    <label for="{{ form.price.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.price.label }}</label>
-                    {{ form.price }}
-                    {% if form.price.errors %}
-                        <ul class="mt-1 text-sm text-red-600">
-                            {% for error in form.price.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
-
-                <div>
-                    <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.description.label }}</label>
-                    {{ form.description }}
-                    {% if form.description.errors %}
-                        <ul class="mt-1 text-sm text-red-600">
-                            {% for error in form.description.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
-
-                <div>
-                    <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ form.image.label }}</label>
-                    {{ form.image }}
-                    {% if form.image.errors %}
-                        <ul class="mt-1 text-sm text-red-600">
-                            {% for error in form.image.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </div>
-
-                <div class="flex justify-end space-x-4">
-                    {% if product %}
-                        <a href="{{ product.get_detail_url }}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-colors duration-200">Cancel</a>
-                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">Update Product</button>
-                    {% else %}
-                        <a href="{% url 'products:list' %}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition-colors duration-200">Cancel</a>
-                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors duration-200">Save Product</button>
-                    {% endif %}
-                </div>
-            </form>
-        </div>
-
+{% block title %}
+    {% if product %}Edit Product - E-commerce Admin Panel{% else %}Add Product - E-commerce Admin Panel{% endif %}
 {% endblock %}
 
+{% block content %}
+    <header class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-800">
+            {% if product %}Edit Product{% else %}Add Product{% endif %}
+        </h2>
+        <button class="md:hidden bg-indigo-600 text-white p-2 rounded" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
+
+    {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <div class="p-4 rounded-lg
+                    {% if message.tags == 'success' %}bg-green-100 text-green-700 border border-green-400{% elif message.tags == 'error' %}bg-red-100 text-red-700 border border-red-400{% endif %}">
+                    <span>{{ message }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
+    <div class="bg-white p-6 rounded-lg shadow-md animate-fadeIn">
+        <form method="post" class="space-y-6" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Product Information</h3>
+
+                    <!-- Name Field -->
+                    <div class="mb-4">
+                        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Product Name *
+                        </label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="mt-1">
+                                {% for error in form.name.errors %}
+                                    <p class="text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Category Field -->
+                    <div class="mb-4">
+                        <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Category *
+                        </label>
+                        {{ form.category }}
+                        {% if form.category.errors %}
+                            <div class="mt-1">
+                                {% for error in form.category.errors %}
+                                    <p class="text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Price Field -->
+                    <div class="mb-4">
+                        <label for="{{ form.price.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Price *
+                        </label>
+                        {{ form.price }}
+                        {% if form.price.errors %}
+                            <div class="mt-1">
+                                {% for error in form.price.errors %}
+                                    <p class="text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Additional Information</h3>
+
+                    <!-- Description Field -->
+                    <div class="mb-4">
+                        <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Description *
+                        </label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="mt-1">
+                                {% for error in form.description.errors %}
+                                    <p class="text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Image Field -->
+                    <div class="mb-4">
+                        <label for="{{ form.image.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Product Image *
+                        </label>
+                        {% if product and product.image %}
+                            <div class="mb-2">
+                                <img src="{{ product.image.url }}" alt="Current product image" class="h-32 w-32 object-cover rounded">
+                            </div>
+                        {% endif %}
+                        {{ form.image }}
+                        <p class="mt-1 text-sm text-gray-500">Upload PNG, JPG or JPEG (max 2MB)</p>
+                        {% if form.image.errors %}
+                            <div class="mt-1">
+                                {% for error in form.image.errors %}
+                                    <p class="text-sm text-red-600">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="mt-8 flex justify-end space-x-4">
+                {% if product %}
+                    <a href="{{ product.get_detail_url }}"
+                       class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <i class="fas fa-times mr-2"></i>Cancel
+                    </a>
+                    <button type="submit"
+                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <i class="fas fa-save mr-2"></i>Update Product
+                    </button>
+                {% else %}
+                    <a href="{% url 'products:list' %}"
+                       class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <i class="fas fa-times mr-2"></i>Cancel
+                    </a>
+                    <button type="submit"
+                            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <i class="fas fa-save mr-2"></i>Save Product
+                    </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}
